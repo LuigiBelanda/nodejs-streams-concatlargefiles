@@ -1,5 +1,5 @@
 <h1 align="center"> :inbox_tray: Node Streams - Concat Large Files</h1>
-Utilizando Node Streams para trabalhar com muitos dados de arquivos, mudando formato dos dados (csv -> json, json -> csv), Transform, manipulação de dados etc.
+Utilizando Node Streams para trabalhar com muitos dados de arquivos, mudando formato dos dados (csv -> json, json -> csv), Transform, manipulação de dados, leitura e escrita sob demanda etc. Tudo isso foi visto pela aula do <a href="https://youtu.be/iT97rkTEvSo">Erick Wendel</a>
 
 - Versão do node: 14.21.2
 
