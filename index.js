@@ -12,6 +12,7 @@
  *  https://www.w3schools.com/js/js_json_parse.asp
  *  https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify
  *  https://www.w3schools.com/js/js_json_stringify.asp
+ *  https://www.npmjs.com/package/csvtojson
  * 
  * 
  *  Comandos usados:
@@ -95,7 +96,7 @@ setInterval(() => process.stdout.write("."), ONE_SECOND).unref();
  * 
  *  TERCEIRA ETAPA:
  *  Aqui começamos a trabalhar propriamente com as streams
- *  Lendo nossos arquivos ( streams, combinedStreams ) e juntando as streams
+ *  Lendo nossos arquivos ( createReadStream, streams, combinedStreams ) e juntando as streams
  *  dos arquivos que lemos em uma só ( StreamConcat ) 
  *  Transformando nossos dados de cvs para json ( csvtojson() )
  *  Manipulando os dados e pegando apenas os dados que queremos (Transform / handleStream)
