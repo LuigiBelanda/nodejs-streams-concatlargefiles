@@ -39,6 +39,8 @@ import { promises, createReadStream, createWriteStream } from "node:fs";
 import { pipeline, Transform } from "node:stream";
 import debug from "debug";
 import csvtojson from "csvtojson";
+import jsontocsv from "json-to-csv-stream";
+import StreamConcat from "stream-concat";
 
 const { readdir } = promises;
 const log = debug("app:concat");
@@ -92,10 +94,12 @@ setInterval(() => process.stdout.write("."), ONE_SECOND).unref();
 /**
  * 
  *  TERCEIRA ETAPA:
- *  Aqui começamos a trabalhar propriamente com as stream 
- *  Lendo nosso arquivo (createReadStream / Readable Stream)
+ *  Aqui começamos a trabalhar propriamente com as streams
+ *  Lendo nossos arquivos ( streams, combinedStreams ) e juntando as streams
+ *  dos arquivos que lemos em uma só ( StreamConcat ) 
  *  Transformando nossos dados de cvs para json ( csvtojson() )
  *  Manipulando os dados e pegando apenas os dados que queremos (Transform / handleStream)
+ *  Transformando os dados de json para csv
  *  Por fim, enviando esses dados para alguma saída (createWriteStream / Writable stream)
  * 
  *  Essas etapas são definidas no nosso pipeline (pipelineAsync).
@@ -107,9 +111,13 @@ setInterval(() => process.stdout.write("."), ONE_SECOND).unref();
 
 
 // lendo os arquivos (readable stream)
-const combinedStreams = createReadStream(join(filesDir, files[0]));
+const streams = files.map(
+    item => createReadStream(join(filesDir, item))
+)
 
-// trabalhando com os dados dos arquivos - pegando apenas os dados que queremos
+const combinedStreams = new StreamConcat(streams);
+
+// trabalhando com os dados dos arquivos - pegando apenas os dados que queremos - mudando tipo dos dados
 const handleStream = new Transform({
     transform: (chunk, enconding, cb) => {
         const data = JSON.parse(chunk);
@@ -119,7 +127,7 @@ const handleStream = new Transform({
             country: data.Country
         }
 
-        log(`Id: ${output.id}`);
+        // log(`Id: ${output.id}`);
         return cb(null, JSON.stringify(output));
     }
 })
@@ -132,6 +140,7 @@ await pipelineAsync(
     combinedStreams,
     csvtojson(),
     handleStream,
+    jsontocsv(),
     finalStream
 );
 
